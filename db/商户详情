@@ -1,0 +1,47 @@
+商户详情
+商户ID  :  80000045
+
+商户名称  :  猴子支付
+
+商户状态  :  正常
+
+商户邮箱  : 
+手机号码  : 
+商户余额  :  0
+
+结算中金额  :  0
+
+商户MD5KEY  :  5f726a223578ab73
+
+商户AESKEY  :  81F81AA77DC0D618
+
+商户回调地址  : 
+开户时间  :  2022-12-12 05:39:41
+
+
+
+
+密钥Md5key  KEI874XNNKKBPUQR7PNZJDSCURQTGXBZ
+
+密钥Deskey  K5ZLL63GZ204SLQ7
+
+
+27473514
+
+rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+
+,?>Y9uuXM7=0
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Mall2022!!';
+
+GRANT ALL PRIVILEGES ON yamidb.* TO 'yami'@'%' IDENTIFIED BY 'Mall2022!!';
+
+Mall2022!!
+
+GRANT ALL ON *.* TO root@'%' IDENTIFIED BY 'Mall2022!!' WITH GRANT OPTION; 
+
+
+"scripts": {
+    "serve": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service serve",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build",
+    "build:report": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build --report",
