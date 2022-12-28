@@ -1,6 +1,0 @@
-nohup java -jar -Dspring.profiles.active=prod "/data/java/yami-shop-api-0.0.1-SNAPSHOT.jar" > "/data/java/log/api-console.log" &
-
-nohup java -jar -Dspring.profiles.active=prod,quartz "/data/java/yami-shop-admin-0.0.1-SNAPSHOT.jar" > "/data/java/log/admin-console.log" &
-
-
-101.32.19.119
