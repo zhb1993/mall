@@ -4,28 +4,28 @@
 <view class="container">
   <view class="submit-order">
     <!-- 收货地址 -->
-    <view class="delivery-addr " @tap="toAddrListPage">
-      <view class="addr-bg " v-if="!userAddr">
-        <view class="add-addr">
-          <view class="plus-sign-img">
-            <image src="/static/images/icon/plus-sign.png"></image>
-          </view>
-          <text>Añadir Dirección</text>
-        </view>
-        <view class="arrow empty"></view>
-      </view>
-      <view class="addr-bg whole" v-if="userAddr">
-        <view class="addr-icon">
-          <image src="/static/images/icon/addr.png"></image>
-        </view>
-        <view class="user-info">
-          <text class="item">{{userAddr.receiver}}</text>
-          <text class="item">{{userAddr.mobile}}</text>
-        </view>
-        <view class="addr">{{userAddr.province}}{{userAddr.city}}{{userAddr.area}}{{userAddr.addr}}</view>
-        <view class="arrow"></view>
-      </view>
-    </view>
+<!--    <view class="delivery-addr " @tap="toAddrListPage">-->
+<!--      <view class="addr-bg " v-if="!userAddr">-->
+<!--        <view class="add-addr">-->
+<!--          <view class="plus-sign-img">-->
+<!--            <image src="/static/images/icon/plus-sign.png"></image>-->
+<!--          </view>-->
+<!--          <text>Añadir Dirección</text>-->
+<!--        </view>-->
+<!--        <view class="arrow empty"></view>-->
+<!--      </view>-->
+<!--      <view class="addr-bg whole" v-if="userAddr">-->
+<!--        <view class="addr-icon">-->
+<!--          <image src="/static/images/icon/addr.png"></image>-->
+<!--        </view>-->
+<!--        <view class="user-info">-->
+<!--          <text class="item">{{userAddr.receiver}}</text>-->
+<!--          <text class="item">{{userAddr.mobile}}</text>-->
+<!--        </view>-->
+<!--        <view class="addr">{{userAddr.province}}{{userAddr.city}}{{userAddr.area}}{{userAddr.addr}}</view>-->
+<!--        <view class="arrow"></view>-->
+<!--      </view>-->
+<!--    </view>-->
 
     <!-- 商品详情 -->
     <view class="prod-item">
@@ -358,13 +358,13 @@ export default {
      * 提交订单
      */
     toPay: function () {
-      if (!this.userAddr) {
-        uni.showToast({
-          title: 'Seleccionar Dirección',
-          icon: "none"
-        });
-        return;
-      }
+      // if (!this.userAddr) {
+      //   uni.showToast({
+      //     title: 'Seleccionar Dirección',
+      //     icon: "none"
+      //   });
+      //   return;
+      // }
 
       this.submitOrder();
     },

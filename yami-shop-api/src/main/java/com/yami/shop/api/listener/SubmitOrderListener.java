@@ -88,16 +88,16 @@ public class SubmitOrderListener {
         Map<Long, Product> prodStocksMap = new HashMap<>(16);
 
         // 把订单地址保存到数据库
-        UserAddrOrder userAddrOrder = mapperFacade.map(mergerOrder.getUserAddr(), UserAddrOrder.class);
-        if (userAddrOrder == null) {
-            throw new YamiShopBindException("请填写收货地址");
-        }
-        userAddrOrder.setUserId(userId);
-        userAddrOrder.setCreateTime(now);
-        userAddrOrderService.save(userAddrOrder);
+//        UserAddrOrder userAddrOrder = mapperFacade.map(mergerOrder.getUserAddr(), UserAddrOrder.class);
+//        if (userAddrOrder == null) {
+//            throw new YamiShopBindException("请填写收货地址");
+//        }
+//        userAddrOrder.setUserId(userId);
+//        userAddrOrder.setCreateTime(now);
+//        userAddrOrderService.save(userAddrOrder);
 
         // 订单地址id
-        Long addrOrderId = userAddrOrder.getAddrOrderId();
+//        Long addrOrderId = userAddrOrder.getAddrOrderId();
 
 
         // 每个店铺生成一个订单
@@ -174,7 +174,7 @@ public class SubmitOrderListener {
             order.setIsPayed(0);
             order.setDeleteStatus(0);
             order.setProductNums(shopCartOrderDto.getTotalCount());
-            order.setAddrOrderId(addrOrderId);
+//            order.setAddrOrderId(addrOrderId);
             order.setReduceAmount(Arith.sub(Arith.add(shopCartOrderDto.getTotal(), shopCartOrderDto.getTransfee()), shopCartOrderDto.getActualTotal()));
             order.setFreightAmount(shopCartOrderDto.getTransfee());
             order.setRemarks(shopCartOrderDto.getRemarks());
