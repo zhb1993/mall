@@ -18,14 +18,18 @@ import com.yami.shop.bean.event.PaySuccessOrderEvent;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderSettlement;
 import com.yami.shop.bean.app.param.PayParam;
+import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.pay.PayInfoDto;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.Arith;
+import com.yami.shop.common.util.PasswordUtil;
 import com.yami.shop.dao.OrderMapper;
 import com.yami.shop.dao.OrderSettlementMapper;
+import com.yami.shop.dao.UserMapper;
 import com.yami.shop.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,12 +50,22 @@ public class PayServiceImpl implements PayService {
     @Autowired
     private OrderSettlementMapper orderSettlementMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     private Snowflake snowflake;
+
+    @Autowired
+    private PasswordUtil passwordUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     /**
      * 不同的订单号，同一个支付流水号
@@ -60,6 +74,18 @@ public class PayServiceImpl implements PayService {
     @Transactional(rollbackFor = Exception.class)
     public PayInfoDto pay(String userId, PayParam payParam) {
 
+
+        //判断支付密码（登陆密码）是否正确
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            // 未找到此用户信息
+            throw new YamiShopBindException("未找到此用户信息");
+        }
+        String decryptPassword = passwordUtil.decryptPassword(payParam.getPassword());
+        if (StrUtil.isBlank(decryptPassword) || !passwordEncoder.matches(decryptPassword,user.getLoginPassword())) {
+            // 登陆密码错误
+            throw new YamiShopBindException("登陆密码错误");
+        }
 
         // 不同的订单号的产品名称
         StringBuilder prodName = new StringBuilder();
@@ -85,6 +111,9 @@ public class PayServiceImpl implements PayService {
         for (OrderSettlement orderSettlement : settlements) {
             payAmount = Arith.add(payAmount, orderSettlement.getPayAmount());
         }
+
+        //查询用户余额是否足够
+
 
         prodName.substring(0, Math.min(100, prodName.length() - 1));
 

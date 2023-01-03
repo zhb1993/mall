@@ -62,6 +62,8 @@ public class UserRegisterController {
         user.setUserMail(userRegisterParam.getUserMail());
         String decryptPassword = passwordManager.decryptPassword(userRegisterParam.getPassWord());
         user.setLoginPassword(passwordEncoder.encode(decryptPassword));
+        //设置支付密码和登陆密码一样
+        user.setPayPassword(passwordEncoder.encode(decryptPassword));
         String userId = IdUtil.simpleUUID();
         user.setUserId(userId);
         userService.save(user);
@@ -95,6 +97,8 @@ public class UserRegisterController {
         }
         user.setModifyTime(new Date());
         user.setLoginPassword(password);
+        //设置支付密码和登陆密码一样
+        user.setPayPassword(password);
         userService.updateById(user);
         return ResponseEntity.ok().build();
     }

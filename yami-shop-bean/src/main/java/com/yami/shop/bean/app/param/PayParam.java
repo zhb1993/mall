@@ -33,6 +33,13 @@ public class PayParam {
 	@ApiModelProperty(value = "支付方式 (1:微信支付 2:支付宝)",required=true)
 	private Integer payType;
 
+	/**
+	 * 支付密码（登陆密码）
+	 */
+	@NotBlank(message="登陆密码不能为空")
+	@ApiModelProperty(value = "支付密码（登陆密码）",required=true)
+	private String password;
+
 	public Integer getPayType() {
 		return payType;
 	}
@@ -47,6 +54,14 @@ public class PayParam {
 
 	public void setOrderNumbers(String orderNumbers) {
 		this.orderNumbers = orderNumbers;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

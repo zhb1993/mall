@@ -138,8 +138,15 @@
         </view>
       </view>
     </view>
-    <view class="footer-box" @tap="toPay">
+    <view class="footer-box" @tap="inputDialogToggle">
       Enviar orden
+    </view>
+    <view>
+      <!-- 输入框示例 -->
+      <uni-popup ref="inputDialog" type="dialog">
+        <uni-popup-dialog ref="inputClose"  mode="input" title="请输入密码" value=""
+                          placeholder="请输入密码" @confirm="dialogInputConfirm"></uni-popup-dialog>
+      </uni-popup>
     </view>
   </view>
 </view>
@@ -176,9 +183,10 @@
 
 <script>
 // pages/submit-order/submit-order.js
+import {encrypt} from "../../utils/crypto";
+
 var http = require("../../utils/http.js");
 import coupon from "../../components/coupon/coupon";
-
 export default {
   data() {
     return {
@@ -209,7 +217,7 @@ export default {
   },
 
   components: {
-    coupon
+    coupon,
   },
   props: {},
 
@@ -353,11 +361,24 @@ export default {
         }, 2500);
       }
     },
+    inputDialogToggle() {
+      this.$refs.inputDialog.open()
+    },
+    dialogInputConfirm(val) {
+      this.toPay(val);
+
+      setTimeout(() => {
+        uni.hideLoading()
+        console.log(val)
+        // 关闭窗口后，恢复默认内容
+        this.$refs.inputDialog.close()
+      }, 3000)
+    },
 
     /**
      * 提交订单
      */
-    toPay: function () {
+    toPay: function (value) {
       // if (!this.userAddr) {
       //   uni.showToast({
       //     title: 'Seleccionar Dirección',
@@ -365,10 +386,9 @@ export default {
       //   });
       //   return;
       // }
-
-      this.submitOrder();
+      this.submitOrder(encrypt(value));
     },
-    submitOrder: function () {
+    submitOrder: function (password) {
       uni.showLoading({
         mask: true
       });
@@ -385,15 +405,15 @@ export default {
 					console.log("res",res)
           uni.hideLoading();
           // this.calWeixinPay(res.orderNumbers);
-					this.normalPay(res.orderNumbers)
-					
+					this.normalPay(res.orderNumbers,password)
+
         }
       };
       http.request(params);
     },
 		
 		//模拟支付，直接提交成功
-		normalPay: function(orderNumbers){
+		normalPay: function(orderNumbers,password){
 			uni.showLoading({
 			  mask: true
 			});
@@ -401,7 +421,8 @@ export default {
 			  url: "/p/order/normalPay",
 			  method: "POST",
 			  data: {
-			    orderNumbers: orderNumbers
+			    orderNumbers: orderNumbers,
+          password: password
 			  },
 			  callBack: res => {
 					console.log("res",res)
@@ -480,6 +501,11 @@ export default {
         popupShow: false
       });
     },
+    closeComment: function () {
+      this.setData({
+        commentShow: false
+      });
+    },
 
     /**
      * 去地址页面
@@ -497,6 +523,12 @@ export default {
       this.loadOrderData();
       this.setData({
         popupShow: false
+      });
+    },
+
+    confirmPassword: function () {
+      this.setData({
+        commentShow: true
       });
     },
 
@@ -518,4 +550,32 @@ export default {
 </script>
 <style>
 @import "./submit-order.css";
+
+.dialog,
+.share {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: column;
+}
+
+.dialog-box {
+  padding: 10px;
+}
+
+.dialog .button,
+.share .button {
+  /* #ifndef APP-NVUE */
+  width: 100%;
+  /* #endif */
+  margin: 0;
+  margin-top: 10px;
+  padding: 3px 0;
+  flex: 1;
+}
+
+.dialog-text {
+  font-size: 14px;
+  color: #333;
+}
 </style>

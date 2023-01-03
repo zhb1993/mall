@@ -80,10 +80,17 @@
           <view class="btn">
             <text v-if="item.status==1" class="button" @tap="onCancelOrder" :data-ordernum="item.orderNumber" hover-class="none">取消订单</text>
             <!-- <text class="button warn" :data-ordernum="item.orderNumber" hover-class="none">再次购买</text> -->
-            <text v-if="item.status==1" class="button warn" @tap="normalPay" :data-ordernum="item.orderNumber" hover-class="none">付款</text>
+            <text v-if="item.status==1" class="button warn" @tap="inputDialogToggle" :data-ordernum="item.orderNumber" hover-class="none">付款</text>
             <text v-if="item.status==3 || item.status==5" class="button" @tap="toDeliveryPage" :data-ordernum="item.orderNumber" hover-class="none">查看物流</text>
             <text v-if="item.status==3" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderNumber" hover-class="none">确认收货</text>
           </view>
+        </view>
+        <view>
+          <!-- 输入框示例 -->
+          <uni-popup ref="inputDialog" type="dialog">
+            <uni-popup-dialog ref="inputClose"  mode="input" title="请输入密码" value=""
+                              placeholder="请输入密码" @confirm="normalPay"></uni-popup-dialog>
+          </uni-popup>
         </view>
       </view>
 
@@ -100,6 +107,8 @@
 <script module="wxs" lang="wxs" src="../../wxs/number.wxs"></script>
 
 <script>
+import {encrypt} from "../../utils/crypto";
+
 var http = require("../../utils/http.js");
 var config = require("../../utils/config.js");
 
@@ -109,7 +118,8 @@ export default {
       list: [],
       current: 1,
       pages: 0,
-      sts: 0
+      sts: 0,
+      orderNumbers: ''
     };
   },
 
@@ -298,9 +308,12 @@ export default {
       };
       http.request(params);
     },
-		
+    inputDialogToggle(e) {
+      this.orderNumbers = e.currentTarget.dataset.ordernum;
+      this.$refs.inputDialog[0].open()
+    },
 		//模拟支付，直接提交成功
-		normalPay: function(e){
+		normalPay: function(password){
 			uni.showLoading({
 			  mask: true
 			});
@@ -308,7 +321,8 @@ export default {
 			  url: "/p/order/normalPay",
 			  method: "POST",
 			  data: {
-			    orderNumbers: e.currentTarget.dataset.ordernum
+			    orderNumbers: this.orderNumbers,
+          password: encrypt(password)
 			  },
 			  callBack: res => {
 					console.log("res",res)
@@ -320,7 +334,7 @@ export default {
 						})
 						setTimeout(() => {
 							uni.navigateTo({
-							  url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + e.currentTarget.dataset.ordernum
+							  url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + this.orderNumbers
 							});
 						},1200)
 					}else{
@@ -409,4 +423,31 @@ export default {
 </script>
 <style>
 @import "./orderList.css";
+.dialog,
+.share {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: column;
+}
+
+.dialog-box {
+  padding: 10px;
+}
+
+.dialog .button,
+.share .button {
+  /* #ifndef APP-NVUE */
+  width: 100%;
+  /* #endif */
+  margin: 0;
+  margin-top: 10px;
+  padding: 3px 0;
+  flex: 1;
+}
+
+.dialog-text {
+  font-size: 14px;
+  color: #333;
+}
 </style>
