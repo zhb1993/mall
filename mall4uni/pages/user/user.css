@@ -267,3 +267,25 @@ button.memu-btn.memu-item {
 button.memu-btn.memu-item:after {
   border: 0;
 }
+.balance {
+  background-color: #fff;
+  margin-top:20rpx;
+  display: flex;
+  align-items: center;
+  /*justify-content: space-between;*/
+  height: 100rpx;
+  /*padding:0 0rpx;*/
+  padding-left: 0rpx;
+  font-size: 28rpx;
+}
+.mb-10 {
+  display: flex;
+  /*align-items: center;*/
+  /*justify-content: space-between;*/
+  height: 100rpx;
+  /*padding:0 30rpx;*/
+  font-size: 28rpx;
+  align-items: center;
+  argin-bottom: 10px;
+  /*padding: 15rpx;*/
+}

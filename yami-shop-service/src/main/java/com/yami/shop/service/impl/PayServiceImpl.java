@@ -33,6 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -113,7 +114,15 @@ public class PayServiceImpl implements PayService {
         }
 
         //查询用户余额是否足够
-
+        if (BigDecimal.valueOf(payAmount).compareTo(user.getAccountBalance()) > 0) {
+            //余额不足
+            throw new YamiShopBindException("余额不足，请充值");
+        } else {
+            //扣除余额
+            user.setAccountBalance(user.getAccountBalance().subtract(BigDecimal.valueOf(payAmount)));
+            //更新余额
+            userMapper.updateById(user);
+        }
 
         prodName.substring(0, Math.min(100, prodName.length() - 1));
 

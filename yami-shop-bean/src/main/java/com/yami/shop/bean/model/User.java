@@ -11,6 +11,7 @@
 package com.yami.shop.bean.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -133,5 +134,10 @@ public class User implements Serializable {
      * 积分
      */
     private Integer score;
+
+    /**
+     * 账户余额
+     */
+    private BigDecimal accountBalance;
 
 }

@@ -317,6 +317,7 @@ export default {
 			uni.showLoading({
 			  mask: true
 			});
+      debugger
 			var params = {
 			  url: "/p/order/normalPay",
 			  method: "POST",
@@ -338,6 +339,7 @@ export default {
 							});
 						},1200)
 					}else{
+            debugger
 						uni.showToast({
 							title: "Fallo de Pago!！",
 							icon:"none"

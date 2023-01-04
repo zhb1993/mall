@@ -20,10 +20,10 @@
 			<view class="userinfo-con">
 				<view class="userinfo-avatar">
 					<!-- <open-data type="userAvatarUrl"></open-data> -->
-					<image :src="loginResult.pic ? (loginResult.pic.indexOf('http') === -1 ? picDomain + loginResult.pic : loginResult.pic) : '../../static/images/icon/head04.png'"></image>
+					<image :src="user.pic ? (user.pic.indexOf('http') === -1 ? picDomain + user.pic : user.pic) : '../../static/images/icon/head04.png'"></image>
 				</view>
 				<view class="userinfo-name">
-					<view>{{loginResult.nickName ? loginResult.nickName : "Nombre de Usuario"}}</view>
+					<view>{{user.nickName ? user.nickName : "Nombre de Usuario"}}</view>
 					<!-- <open-data type="userNickName"></open-data> -->
 				</view>
 			</view>
@@ -39,7 +39,16 @@
 			</view>
 		</view>
 		<!-- end 用户信息 -->
-
+    <view class="balance">
+      <uni-icons type="wallet" size="30" style="margin-right: 0px;margin-left: 20px"></uni-icons>
+        <uni-section class="mb-10" title="余额">
+          <template v-slot:right>
+            <view>
+            <text style="display: inline-block;width: 60vw;text-align: right;position: relative;left: 15vw;">{{ user.accountBalance ? user.accountBalance : 0.00 }}</text>
+            </view>
+          </template>
+        </uni-section>
+    </view>
 		<view class="list-cont">
 
 			<!-- 订单状态 -->
@@ -136,7 +145,8 @@
 				sts: '',
 				collectionCount: 0,
 				isAuthInfo: false,
-				loginResult: '',
+				loginResult: {},
+        user: {},
 				picDomain: config.picDomain
 			};
 		},
@@ -164,6 +174,7 @@
 			ths.setData({
 				loginResult: uni.getStorageSync("loginResult"),
 				// isAuthInfo: Boolean(wx.getStorageSync('loginResult').userId),
+        user: uni.getStorageSync("loginResult").user,
 			});
 			if (ths.loginResult) {
 				ths.setData({

@@ -9,6 +9,7 @@
  */
 package com.yami.shop.security.common.vo;
 
+import com.yami.shop.bean.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -29,4 +30,7 @@ public class TokenInfoVO {
 
     @ApiModelProperty("在多少秒后过期")
     private Integer expiresIn;
+
+    @ApiModelProperty("用户信息")
+    private User user;
 }
