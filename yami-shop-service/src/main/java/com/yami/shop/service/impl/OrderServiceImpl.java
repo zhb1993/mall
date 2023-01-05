@@ -208,9 +208,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             //订单不存在
             throw new YamiShopBindException("订单不存在");
         }
-        if (!Objects.equals(order.getStatus(), OrderStatus.SUCCESS.value()) && !Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) ) {
-            throw new YamiShopBindException("订单未完成或未关闭，无法回收订单");
-        }
+//        if (!Objects.equals(order.getStatus(), OrderStatus.SUCCESS.value()) && !Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) ) {
+//            throw new YamiShopBindException("订单未完成或未关闭，无法回收订单");
+//        }
         //判断订单是否已支付
         if (order.getIsPayed() != 1) {
             throw new YamiShopBindException("订单未支付");

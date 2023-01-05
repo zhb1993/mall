@@ -39,16 +39,21 @@
 			</view>
 		</view>
 		<!-- end 用户信息 -->
-    <view class="balance">
-      <uni-icons type="wallet" size="30" style="margin-right: 0px;margin-left: 20px"></uni-icons>
-        <uni-section class="mb-10" title="余额">
-          <template v-slot:right>
-            <view>
-            <text style="display: inline-block;width: 60vw;text-align: right;position: relative;left: 15vw;">{{ user.accountBalance ? user.accountBalance : 0.00 }}</text>
-            </view>
-          </template>
-        </uni-section>
-    </view>
+<!--    <view class="my-menu">-->
+<!--      <view class="memu-item">-->
+<!--        <view class="i-name">-->
+<!--      <uni-icons type="wallet" size="30" style="margin-right: 0px;margin-left: 20px"></uni-icons>-->
+<!--        <uni-section class="mb-10" title="Saldo">-->
+<!--          <template v-slot:right>-->
+<!--            <view>-->
+<!--            <text style="display: inline-block;width: 60vw;text-align: right;position: relative;left: 15vw;">{{ user.accountBalance ? user.accountBalance : 0.00 }}</text>-->
+<!--            </view>-->
+<!--          </template>-->
+<!--        </uni-section>-->
+<!--        </view>-->
+<!--      </view>-->
+<!--    </view>-->
+
 		<view class="list-cont">
 
 			<!-- 订单状态 -->
@@ -101,6 +106,32 @@
 					<view class="tit">Historial</view>
 				</view>
 			</view>
+      <view class="my-menu">
+        <view class="memu-item" @tap="">
+          <view class="i-name">
+            <image src="/static/images/icon/balance.png"></image>
+            <text>Saldo</text>
+          </view>
+          <view>{{user ? user.accountBalance : '0.00'}}</view>
+        </view>
+      </view>
+
+      <view class="my-menu">
+        <view class="memu-item" @tap="inputDialogToggle">
+          <view class="i-name">
+            <image src="/static/images/icon/recovery.png"></image>
+            <text>Reciclaje</text>
+          </view>
+          <view class="arrowhead"></view>
+        </view>
+      </view>
+      <view>
+        <!-- 输入框示例 -->
+        <uni-popup ref="inputDialog" type="dialog">
+          <uni-popup-dialog ref="inputClose"  mode="input" title="请输入订单编号" value=""
+                            placeholder="请输入订单编号" @confirm="recoveryOrder"></uni-popup-dialog>
+        </uni-popup>
+      </view>
 
 			<view class="my-menu">
 <!--				<view class="memu-item" @tap="toDistCenter">
@@ -117,9 +148,10 @@
 						<image src="/static/images/icon/myAddr.png"></image>
 						<text>Direccion</text>
 					</view>
-					<view class="arrowhead"></view>
+          <view class="arrowhead"></view>
 				</view>
 			</view>
+
 			<!--end 列表项 -->
 
 			<view class="log-out" @tap="logout" v-if="isAuthInfo">
@@ -134,7 +166,9 @@
 
 <script>
 	// pages/user/user.js
-	var http = require("../../utils/http.js");
+	import {encrypt} from "../../utils/crypto";
+
+  var http = require("../../utils/http.js");
 	var util = require("../../utils/util.js");
 	var config = require("../../utils/config.js");
 
@@ -168,40 +202,41 @@
 		 * 生命周期函数--监听页面显示
 		 */
 		onShow: function() {
-			//加载订单数字
-			var ths = this; // var status = ths.data.status
+      //加载订单数字
+      var ths = this; // var status = ths.data.status
 
-			ths.setData({
-				loginResult: uni.getStorageSync("loginResult"),
-				// isAuthInfo: Boolean(wx.getStorageSync('loginResult').userId),
-        user: uni.getStorageSync("loginResult").user,
-			});
-			if (ths.loginResult) {
-				ths.setData({
-					isAuthInfo: true
-				})
-			} else {
-				ths.setData({
-					isAuthInfo: false
-				})
-			}
-			if (ths.isAuthInfo) {
-				uni.showLoading();
-				var params = {
-					url: "/p/myOrder/orderCount",
-					method: "GET",
-					data: {},
-					callBack: function(res) {
-						uni.hideLoading();
-						ths.setData({
-							orderAmount: res
-						});
-					}
-				};
-				http.request(params);
-				this.showCollectionCount();
-			}
-		},
+      ths.setData({
+        loginResult: uni.getStorageSync("loginResult"),
+        // isAuthInfo: Boolean(wx.getStorageSync('loginResult').userId),
+        // user: uni.getStorageSync("loginResult").user,
+      });
+      if (ths.loginResult) {
+        ths.setData({
+          isAuthInfo: true
+        })
+      } else {
+        ths.setData({
+          isAuthInfo: false
+        })
+      }
+      if (ths.isAuthInfo) {
+        uni.showLoading();
+        var params = {
+          url: "/p/myOrder/orderCount",
+          method: "GET",
+          data: {},
+          callBack: function (res) {
+            uni.hideLoading();
+            ths.setData({
+              orderAmount: res
+            });
+          }
+        };
+        http.request(params);
+        this.showCollectionCount();
+        this.getUserInfo();
+      }
+    },
 
 		/**
 		 * 生命周期函数--监听页面隐藏
@@ -270,7 +305,28 @@
 				});
 			},
 
-			/**
+      /**
+       * 查询用户信息
+       */
+      getUserInfo() {
+        var ths = this;
+        uni.showLoading();
+        var params = {
+          url: "/p/user/getUserInfoById",
+          method: "GET",
+          data: {},
+          callBack: function(res) {
+            uni.hideLoading();
+            ths.setData({
+              user: res
+            });
+          }
+        };
+        http.request(params);
+      },
+
+
+      /**
 			 * 查询所有的收藏量
 			 */
 			showCollectionCount: function() {
@@ -289,6 +345,37 @@
 				};
 				http.request(params);
 			},
+      inputDialogToggle() {
+        this.$refs.inputDialog.open()
+      },
+      recoveryOrder: function(orderNumber){
+        uni.showLoading({
+          mask: true
+        });
+        var params = {
+          url: "/p/myOrder/recoveryOrder/"+orderNumber,
+          method: "POST",
+          data: {},
+          callBack: res => {
+            console.log("res",res)
+            uni.hideLoading();
+            if(res){
+              this.getUserInfo();
+              uni.showToast({
+                title: "Reciclaje Exitoso",
+                icon:"none"
+              });
+            }else{
+              uni.showToast({
+                title: "Fallo de Reciclaje!",
+                icon:"none"
+              })
+            }
+          }
+        };
+        http.request(params);
+
+      },
 
 			/**
 			 * 我的收藏跳转
@@ -352,4 +439,31 @@
 </script>
 <style>
 	@import "./user.css";
+  .dialog,
+  .share {
+    /* #ifndef APP-NVUE */
+    display: flex;
+    /* #endif */
+    flex-direction: column;
+  }
+
+  .dialog-box {
+    padding: 10px;
+  }
+
+  .dialog .button,
+  .share .button {
+    /* #ifndef APP-NVUE */
+    width: 100%;
+    /* #endif */
+    margin: 0;
+    margin-top: 10px;
+    padding: 3px 0;
+    flex: 1;
+  }
+
+  .dialog-text {
+    font-size: 14px;
+    color: #333;
+  }
 </style>

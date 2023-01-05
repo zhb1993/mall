@@ -55,4 +55,15 @@ public class UserController {
 		userService.updateById(user);
 		return ResponseEntity.ok().build();
 	}
+
+	/**
+	 * 查看用户详情
+	 */
+	@GetMapping("/getUserInfoById")
+	@ApiOperation(value="查看用户详情", notes="根据用户ID（userId）获取用户详情")
+	public ResponseEntity<User> getUserInfoById() {
+		String userId = SecurityUtils.getUser().getUserId();
+		User user = userService.getById(userId);
+		return ResponseEntity.ok(user);
+	}
 }

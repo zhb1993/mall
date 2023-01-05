@@ -221,9 +221,9 @@ public class MyOrderController {
     /**
      * 回收用户订单商品
      */
-    @PostMapping("/recoveryOrder")
+    @PostMapping("/recoveryOrder/{orderNumber}")
     @ApiOperation(value = "回收用户订单商品", notes = "根据传入的订单号和登陆的用户判断该订单是否属于该用户、是否已支付，满足才能回收")
-    public ResponseEntity<String> recoveryOrder(@Valid String orderNumber) {
+    public ResponseEntity<String> recoveryOrder(@PathVariable("orderNumber")String orderNumber) {
         String userId = SecurityUtils.getUser().getUserId();
         return orderService.recoveryOrder(orderNumber, userId);
     }
