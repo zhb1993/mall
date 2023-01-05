@@ -22,6 +22,7 @@ import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.param.OrderParam;
 
 import cn.hutool.core.date.DateTime;
+import org.springframework.http.ResponseEntity;
 
 /**
  * @author lgh on 2018/09/15.
@@ -54,4 +55,12 @@ public interface OrderService extends IService<Order> {
     void deleteOrders(List<Order> orders);
 
     OrderCountData getOrderCount(String userId);
+
+    /**
+     * 回收用户订单商品
+     * @param orderNumber
+     * @param userId
+     * @return
+     */
+    ResponseEntity<String> recoveryOrder(String orderNumber, String userId);
 }

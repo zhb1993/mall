@@ -31,6 +31,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -215,5 +216,16 @@ public class MyOrderController {
         return ResponseEntity.ok(orderCountMap);
     }
 
+
+
+    /**
+     * 回收用户订单商品
+     */
+    @PostMapping("/recoveryOrder")
+    @ApiOperation(value = "回收用户订单商品", notes = "根据传入的订单号和登陆的用户判断该订单是否属于该用户、是否已支付，满足才能回收")
+    public ResponseEntity<String> recoveryOrder(@Valid String orderNumber) {
+        String userId = SecurityUtils.getUser().getUserId();
+        return orderService.recoveryOrder(orderNumber, userId);
+    }
 
 }

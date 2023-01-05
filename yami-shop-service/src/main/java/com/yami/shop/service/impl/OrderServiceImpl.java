@@ -12,22 +12,23 @@ package com.yami.shop.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
+import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.event.CancelOrderEvent;
 import com.yami.shop.bean.event.ReceiptOrderEvent;
 import com.yami.shop.bean.event.SubmitOrderEvent;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
+import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.OrderParam;
+import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageAdapter;
-import com.yami.shop.dao.OrderItemMapper;
-import com.yami.shop.dao.OrderMapper;
-import com.yami.shop.dao.ProductMapper;
-import com.yami.shop.dao.SkuMapper;
+import com.yami.shop.dao.*;
 import com.yami.shop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,9 +37,11 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,6 +62,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
 
     @Autowired
@@ -183,6 +189,40 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public OrderCountData getOrderCount(String userId) {
         return orderMapper.getOrderCount(userId);
+    }
+
+    /**
+     * 回收用户订单商品
+     * @param orderNumber
+     * @param userId
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity recoveryOrder(String orderNumber, String userId) {
+        //根据用户id和订单编号查询订单
+        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<Order>()
+                .eq(Order::getOrderNumber, orderNumber).eq(Order::getUserId, userId).eq(Order::getDeleteStatus, 0);
+        Order order = orderMapper.selectOne(queryWrapper);
+        if (order == null) {
+            //订单不存在
+            throw new YamiShopBindException("订单不存在");
+        }
+        if (!Objects.equals(order.getStatus(), OrderStatus.SUCCESS.value()) && !Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) ) {
+            throw new YamiShopBindException("订单未完成或未关闭，无法回收订单");
+        }
+        //判断订单是否已支付
+        if (order.getIsPayed() != 1) {
+            throw new YamiShopBindException("订单未支付");
+        }
+        //添加用户余额
+        User user = userMapper.selectById(userId);
+        user.setAccountBalance(user.getAccountBalance().add(BigDecimal.valueOf(order.getActualTotal())));
+        userMapper.updateById(user);
+        //删除订单
+        order.setDeleteStatus(2);
+        orderMapper.updateById(order);
+        return ResponseEntity.ok("回收成功");
     }
 
 
