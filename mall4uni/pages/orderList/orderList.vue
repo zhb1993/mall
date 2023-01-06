@@ -21,9 +21,9 @@
         <view class="order-num">
           <text>Número de Orden：{{item.orderNumber}}</text>
           <view class="order-state">
-            <text :class="'order-sts  ' + (item.status==1?'red':'') + '  ' + ((item.status==5||item.status==6)?'gray':'')">{{item.status==1?'Pendiente de Pago':(item.status==2?'Pendiente de Envío':(item.status==3?'Pendiente de Recibir':(item.status==5?'Completado':'Cancelado')))}}</text>
+            <text :class="'order-sts  ' + (item.status==1?'red':'') + '  ' + ((item.status==5||item.status==6)?'gray':'')">{{item.status==1?'Pendiente de Pago':(item.status==2?'Pendiente de Envío':(item.status==3?'Pendiente de Recibir':(item.status==5?'Completado':(item.status==7?'已回收':'Cancelado'))))}}</text>
 
-            <view class="clear-btn" v-if="item.status==5 || item.status==6">
+            <view class="clear-btn" v-if="item.status==5 || item.status==6 || item.status==7">
               <image src="/static/images/icon/clear-his.png" class="clear-list-btn" @tap="delOrderList" :data-ordernum="item.orderNumber"></image>
             </view>
           </view>

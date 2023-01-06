@@ -215,12 +215,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (order.getIsPayed() != 1) {
             throw new YamiShopBindException("订单未支付");
         }
+        //判断订单是否已经被回收
+        if (order.getStatus() == 7) {
+            throw new YamiShopBindException("订单已经被回收");
+        }
         //添加用户余额
         User user = userMapper.selectById(userId);
         user.setAccountBalance(user.getAccountBalance().add(BigDecimal.valueOf(order.getActualTotal())));
         userMapper.updateById(user);
-        //删除订单
-        order.setDeleteStatus(2);
+        //订单状态设为已回收
+        order.setStatus(7);
         orderMapper.updateById(order);
         return ResponseEntity.ok("回收成功");
     }

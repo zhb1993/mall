@@ -73,7 +73,7 @@ public class Order implements Serializable {
     private String remarks;
 
     /**
-     * 订单状态 -1 已取消 0:待付款 1:待发货 2:待收货 3:已完成
+     * 订单状态 1:待付款 2:待发货 3:待收货 4:待评价 5:成功 6:失败 7:已回收
      */
     private Integer status;
 

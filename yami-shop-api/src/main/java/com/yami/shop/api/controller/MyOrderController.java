@@ -115,7 +115,7 @@ public class MyOrderController {
     @GetMapping("/myOrder")
     @ApiOperation(value = "订单列表信息", notes = "根据订单状态获取订单列表信息，状态为0时获取所有订单")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "status", value = "订单状态 1:待付款 2:待发货 3:待收货 4:待评价 5:成功 6:失败", required = false, dataType = "Integer")
+            @ApiImplicitParam(name = "status", value = "订单状态 1:待付款 2:待发货 3:待收货 4:待评价 5:成功 6:失败 7:已回收", required = false, dataType = "Integer")
     })
     public ResponseEntity<IPage<MyOrderDto>> myOrder(@RequestParam(value = "status") Integer status,PageParam<MyOrderDto> page) {
 
