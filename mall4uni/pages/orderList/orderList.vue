@@ -88,8 +88,8 @@
         <view>
           <!-- 输入框示例 -->
           <uni-popup ref="inputDialog" type="dialog">
-            <uni-popup-dialog ref="inputClose"  mode="input" title="请输入密码" value=""
-                              placeholder="请输入密码" @confirm="normalPay" confirmText="Si" cancelText="No"></uni-popup-dialog>
+            <uni-popup-dialog ref="inputClose"  mode="input" title="Ingrese su contraseña" value=""
+                              placeholder="Ingrese su contraseña" @confirm="normalPay" confirmText="Si" cancelText="No"></uni-popup-dialog>
           </uni-popup>
         </view>
       </view>

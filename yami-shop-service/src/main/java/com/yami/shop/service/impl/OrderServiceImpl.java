@@ -206,7 +206,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Order order = orderMapper.selectOne(queryWrapper);
         if (order == null) {
             //订单不存在
-            throw new YamiShopBindException("订单不存在");
+            throw new YamiShopBindException("Sin Pedido del Producto");
         }
 //        if (!Objects.equals(order.getStatus(), OrderStatus.SUCCESS.value()) && !Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) ) {
 //            throw new YamiShopBindException("订单未完成或未关闭，无法回收订单");
