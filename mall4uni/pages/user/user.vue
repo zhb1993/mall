@@ -112,7 +112,7 @@
             <image src="/static/images/icon/balance.png"></image>
             <text>Saldo</text>
           </view>
-          <view>{{user ? user.accountBalance : '0.00'}}</view>
+          <view>{{towNumber(user.accountBalance)}}</view>
         </view>
       </view>
 
@@ -128,8 +128,8 @@
       <view>
         <!-- 输入框示例 -->
         <uni-popup ref="inputDialog" type="dialog">
-          <uni-popup-dialog ref="inputClose"  mode="input" title="请输入订单编号" value=""
-                            placeholder="请输入订单编号" @confirm="recoveryOrder"></uni-popup-dialog>
+          <uni-popup-dialog ref="inputClose"  mode="input" title="请输入回收订单编号" value=""
+                            placeholder="请输入回收订单编号" @confirm="recoveryOrder" confirmText="Si" cancelText="No"></uni-popup-dialog>
         </uni-popup>
       </view>
 
@@ -434,6 +434,13 @@
 					}
 				})
 			},
+      towNumber(val) {
+        if (val) {
+          return val.toFixed(2);
+        }else {
+          return '0.00';
+        }
+      },
 		}
 	};
 </script>

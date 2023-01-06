@@ -78,18 +78,18 @@
         <!-- end 商品列表 -->
         <view class="prod-foot">
           <view class="btn">
-            <text v-if="item.status==1" class="button" @tap="onCancelOrder" :data-ordernum="item.orderNumber" hover-class="none">取消订单</text>
+            <text v-if="item.status==1" class="button" @tap="onCancelOrder" :data-ordernum="item.orderNumber" hover-class="none">Cancelar la Orden</text>
             <!-- <text class="button warn" :data-ordernum="item.orderNumber" hover-class="none">再次购买</text> -->
-            <text v-if="item.status==1" class="button warn" @tap="inputDialogToggle" :data-ordernum="item.orderNumber" hover-class="none">付款</text>
-            <text v-if="item.status==3 || item.status==5" class="button" @tap="toDeliveryPage" :data-ordernum="item.orderNumber" hover-class="none">查看物流</text>
-            <text v-if="item.status==3" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderNumber" hover-class="none">确认收货</text>
+            <text v-if="item.status==1" class="button warn" @tap="inputDialogToggle" :data-ordernum="item.orderNumber" hover-class="none">Pago</text>
+            <text v-if="item.status==3 || item.status==5" class="button" @tap="toDeliveryPage" :data-ordernum="item.orderNumber" hover-class="none">Ver logística</text>
+            <text v-if="item.status==3" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderNumber" hover-class="none">Confirmación de la recepción</text>
           </view>
         </view>
         <view>
           <!-- 输入框示例 -->
           <uni-popup ref="inputDialog" type="dialog">
             <uni-popup-dialog ref="inputClose"  mode="input" title="请输入密码" value=""
-                              placeholder="请输入密码" @confirm="normalPay"></uni-popup-dialog>
+                              placeholder="请输入密码" @confirm="normalPay" confirmText="Si" cancelText="No"></uni-popup-dialog>
           </uni-popup>
         </view>
       </view>
@@ -244,11 +244,11 @@ export default {
       var ths = this;
       uni.showModal({
         title: '',
-        content: '要取消此订单？',
+        content: 'Cancelar la Orden？',
         confirmColor: "#3e62ad",
         cancelColor: "#3e62ad",
-        cancelText: '否',
-        confirmText: '是',
+        cancelText: 'No',
+        confirmText: 'Si',
 
         success(res) {
           if (res.confirm) {

@@ -145,7 +145,7 @@
       <!-- 输入框示例 -->
       <uni-popup ref="inputDialog" type="dialog">
         <uni-popup-dialog ref="inputClose"  mode="input" title="请输入密码" value=""
-                          placeholder="请输入密码" @confirm="dialogInputConfirm"></uni-popup-dialog>
+                          placeholder="请输入密码" @confirm="dialogInputConfirm" confirmText="Si" cancelText="No"></uni-popup-dialog>
       </uni-popup>
     </view>
   </view>

@@ -91,12 +91,12 @@
       </view>
       <view class="msg-item">
         <view class="item">
-          <text class="item-tit">支付方式：</text>
-          <text class="item-txt">余额支付</text>
+          <text class="item-tit">Formas de Pago：</text>
+          <text class="item-txt">Pago del saldo</text>
         </view>
         <view class="item">
-          <text class="item-tit">配送方式：</text>
-          <text class="item-txt">普通配送</text>
+          <text class="item-tit">Metodo de Envío：</text>
+          <text class="item-txt">Distribucion General</text>
         </view>
         <view class="item">
           <text class="item-tit"></text>
