@@ -114,7 +114,8 @@ public class IndexImgController {
             return;
         }
         if (Objects.isNull(indexImg.getRelation())) {
-            throw new YamiShopBindException("请选择商品");
+            //请选择商品
+            throw new YamiShopBindException("Seleccione el producto");
         }
         Product product = productService.getById(indexImg.getRelation());
         if (Objects.isNull(product)) {

@@ -88,7 +88,7 @@ public class ShopCartController {
     public ResponseEntity<String> deleteAll() {
         String userId = SecurityUtils.getUser().getUserId();
         basketService.deleteAllShopCartItems(userId);
-        return ResponseEntity.ok("删除成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
     @PostMapping("/changeItem")
@@ -141,7 +141,7 @@ public class ShopCartController {
         }
         // 所有都正常时
         basketService.addShopCartItem(param,userId);
-        return ResponseEntity.ok("添加成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
     @GetMapping("/prodCount")

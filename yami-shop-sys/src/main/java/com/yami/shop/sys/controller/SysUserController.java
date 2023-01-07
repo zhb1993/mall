@@ -93,7 +93,8 @@ public class SysUserController {
 		SysUser dbUser = sysUserService.getSysUserById(userId);
 		String password = passwordManager.decryptPassword(param.getPassword());
 		if (!passwordEncoder.matches(password, dbUser.getPassword())) {
-			return ResponseEntity.badRequest().body("原密码不正确");
+			//密码错误
+			return ResponseEntity.badRequest().body("Error de contraseña");
 		}
 		//新密码
 		String newPassword = passwordEncoder.encode(passwordManager.decryptPassword(param.getNewPassword()));

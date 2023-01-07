@@ -144,7 +144,8 @@ public class OrderController {
         String userId = SecurityUtils.getUser().getUserId();
         ShopCartOrderMergerDto mergerOrder = orderService.getConfirmOrderCache(userId);
         if (mergerOrder == null) {
-            throw new YamiShopBindException("订单已过期，请重新下单");
+            //订单已过期，请重新下单
+            throw new YamiShopBindException("La órden ha expirado, por favor ingrese una nueva orden");
         }
 
         List<OrderShopParam> orderShopParams = submitOrderParam.getOrderShopParam();

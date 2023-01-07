@@ -78,7 +78,7 @@ public class AddrController {
             // 清除默认地址缓存
             userAddrService.removeUserAddrByUserId(0L, userId);
         }
-        return ResponseEntity.ok("添加地址成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
     /**
@@ -102,7 +102,7 @@ public class AddrController {
         userAddrService.removeUserAddrByUserId(addrParam.getAddrId(), userId);
         // 清除默认地址缓存
         userAddrService.removeUserAddrByUserId(0L, userId);
-        return ResponseEntity.ok("修改地址成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
     /**
@@ -122,7 +122,7 @@ public class AddrController {
         }
         userAddrService.removeById(addrId);
         userAddrService.removeUserAddrByUserId(addrId, userId);
-        return ResponseEntity.ok("删除地址成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
     /**
@@ -137,7 +137,7 @@ public class AddrController {
 
         userAddrService.removeUserAddrByUserId(0L, userId);
         userAddrService.removeUserAddrByUserId(addrId, userId);
-        return ResponseEntity.ok("修改地址成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
     /**

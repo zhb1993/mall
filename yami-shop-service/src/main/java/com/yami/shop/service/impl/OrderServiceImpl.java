@@ -213,6 +213,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 //        }
         //判断订单是否已支付
         if (order.getIsPayed() != 1) {
+            //订单未支付
             throw new YamiShopBindException("Orden no pagada");
         }
         //判断订单是否已经被回收

@@ -68,8 +68,8 @@ function request(params, isGetTonken) {
 						uni.showModal({
 							title: "提示",
 							content: "登录已过期",
-							cancelText: "取消",
-							confirmText: "确定",
+							cancelText: "No",
+							confirmText: "Si",
 							success: res => {
 								if (res.confirm) {
 									// 跳转登录页面
@@ -99,8 +99,8 @@ function request(params, isGetTonken) {
 						uni.showModal({
 							title: "提示",
 							content: "登录已过期",
-							cancelText: "取消",
-							confirmText: "确定",
+							cancelText: "No",
+							confirmText: "Si",
 							success: res => {
 								if (res.confirm) {
 									// 跳转登录页面
