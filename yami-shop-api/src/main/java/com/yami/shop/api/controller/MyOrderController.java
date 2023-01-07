@@ -190,7 +190,8 @@ public class MyOrderController {
 
         Order order = orderService.getOrderByOrderNumber(orderNumber);
         if (order == null) {
-            throw new YamiShopBindException("该订单不存在");
+            //订单不存在
+            throw new YamiShopBindException("La órden no existe");
         }
         if (!Objects.equals(order.getUserId(), userId)) {
             throw new YamiShopBindException("你没有权限获取该订单信息");
@@ -202,7 +203,7 @@ public class MyOrderController {
         // 删除订单
         orderService.deleteOrders(Arrays.asList(order));
 
-        return ResponseEntity.ok("删除成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
     /**
