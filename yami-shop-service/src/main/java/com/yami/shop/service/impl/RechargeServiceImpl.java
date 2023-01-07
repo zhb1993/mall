@@ -7,5 +7,10 @@ import com.yami.shop.service.RechargeService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RechargeServiceImpl  extends ServiceImpl<RechargeMapper, Recharge> implements RechargeService{
+public class RechargeServiceImpl extends ServiceImpl<RechargeMapper, Recharge> implements RechargeService{
+
+    public String submit(String userId, Long amount){
+
+        return null;
+    }
 }
