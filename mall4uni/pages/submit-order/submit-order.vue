@@ -115,7 +115,7 @@
         </view>
         <view class="item payment">
           <view class="item-txt price">
-            小计：
+            Cantidad Total：
             <text class="symbol">$</text>
             <text class="big-num">{{wxs.parsePrice(actualTotal)[0]}}</text>
             <text class="small-num">.{{wxs.parsePrice(actualTotal)[1]}}</text>

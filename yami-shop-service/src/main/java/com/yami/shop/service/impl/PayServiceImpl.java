@@ -85,7 +85,7 @@ public class PayServiceImpl implements PayService {
         String decryptPassword = passwordUtil.decryptPassword(payParam.getPassword());
         if (StrUtil.isBlank(decryptPassword) || !passwordEncoder.matches(decryptPassword,user.getLoginPassword())) {
             // 登陆密码错误
-            throw new YamiShopBindException("密码错误");
+            throw new YamiShopBindException("Error de contraseña");
         }
 
         // 不同的订单号的产品名称

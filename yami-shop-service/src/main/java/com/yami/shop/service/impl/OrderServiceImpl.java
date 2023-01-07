@@ -206,14 +206,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Order order = orderMapper.selectOne(queryWrapper);
         if (order == null) {
             //订单不存在
-            throw new YamiShopBindException("Sin Pedido del Producto");
+            throw new YamiShopBindException("La órden no existe");
         }
 //        if (!Objects.equals(order.getStatus(), OrderStatus.SUCCESS.value()) && !Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) ) {
 //            throw new YamiShopBindException("订单未完成或未关闭，无法回收订单");
 //        }
         //判断订单是否已支付
         if (order.getIsPayed() != 1) {
-            throw new YamiShopBindException("订单未支付");
+            throw new YamiShopBindException("Orden no pagada");
         }
         //判断订单是否已经被回收
         if (order.getStatus() == 7) {
@@ -226,7 +226,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //订单状态设为已回收
         order.setStatus(7);
         orderMapper.updateById(order);
-        return ResponseEntity.ok("回收成功");
+        return ResponseEntity.ok("Exitoso");
     }
 
 
