@@ -128,8 +128,8 @@
       <view>
         <!-- 输入框示例 -->
         <uni-popup ref="inputDialog" type="dialog">
-          <uni-popup-dialog ref="inputClose"  mode="input" title="Numero de Orden" value=""
-                            placeholder="Numero de Orden" @confirm="recoveryOrder" confirmText="Si" cancelText="No"></uni-popup-dialog>
+          <uni-popup-dialog ref="inputClose"  mode="input" title="Ingrese el número de referencia de la orden" value=""
+                            placeholder="Ingrese el número de referencia de la orden" @confirm="recoveryOrder" confirmText="Si" cancelText="No"></uni-popup-dialog>
         </uni-popup>
       </view>
 
