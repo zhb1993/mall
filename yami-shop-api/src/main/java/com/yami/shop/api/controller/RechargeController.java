@@ -18,10 +18,9 @@ public class RechargeController {
 
     @PostMapping("/submit")
     @ApiOperation(value = "提交充值订单")
-    public ResponseEntity<String> submit(@RequestParam Integer amount){
-
+    public ResponseEntity<String> submit(@RequestParam Long amount){
         String userId = SecurityUtils.getUser().getUserId();
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(rechargeService.submit(userId,amount));
     }
 
 }
