@@ -1,12 +1,16 @@
 package com.yami.shop.service.impl;
 
 import cn.hutool.json.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yami.shop.bean.model.Recharge;
+import com.yami.shop.bean.model.User;
 import com.yami.shop.common.util.Json;
 import com.yami.shop.common.util.OrderNoWorker;
 import com.yami.shop.dao.RechargeMapper;
 import com.yami.shop.service.RechargeService;
+import com.yami.shop.service.UserService;
+import jdk.vm.ci.meta.Local;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +31,11 @@ public class RechargeServiceImpl extends ServiceImpl<RechargeMapper, Recharge> i
 
     @Autowired
     private OrderNoWorker orderNoWorker;
+
+    @Autowired
+    private UserService userService;
+
+
     public String submit(String userId, Long amount){
         log.info("用户id======={}充值======{}",userId, amount);
         String orderNo = orderNoWorker.nextOrderNo();
@@ -65,6 +75,22 @@ public class RechargeServiceImpl extends ServiceImpl<RechargeMapper, Recharge> i
             }
         }
         return null;
+    }
+
+
+    @Override
+    public void callback(HashMap<String, Object> params) {
+        QueryWrapper<Recharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", params.get("merchantorderid").toString());
+        Recharge recharge = getOne(queryWrapper);
+        recharge.setStatus(1);
+        recharge.setSuccessTime(LocalDateTime.now());
+        updateById(recharge);
+        User user = userService.getById(recharge.getUserId());
+        String string = params.get("applyAmount").toString();
+        BigDecimal amount = new BigDecimal(string);
+        user.setAccountBalance(user.getAccountBalance().add(amount));
+        userService.updateById(user);
     }
 
     public static void main(String[] args) {

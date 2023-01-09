@@ -27,4 +27,6 @@ public class Recharge implements Serializable {
 
     private LocalDateTime createTime;
 
+    private LocalDateTime successTime;
+
 }
