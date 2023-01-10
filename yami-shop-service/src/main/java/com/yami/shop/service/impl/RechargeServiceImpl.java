@@ -10,7 +10,6 @@ import com.yami.shop.common.util.OrderNoWorker;
 import com.yami.shop.dao.RechargeMapper;
 import com.yami.shop.service.RechargeService;
 import com.yami.shop.service.UserService;
-import jdk.vm.ci.meta.Local;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ public class RechargeServiceImpl extends ServiceImpl<RechargeMapper, Recharge> i
     @Autowired
     private UserService userService;
 
-
+    @Override
     public String submit(String userId, Long amount){
         log.info("用户id======={}充值======{}",userId, amount);
         String orderNo = orderNoWorker.nextOrderNo();
@@ -53,7 +52,7 @@ public class RechargeServiceImpl extends ServiceImpl<RechargeMapper, Recharge> i
         param.put("userName","bin");
         param.put("emailAddress","123456@qq.com");
         param.put("phoneNum","123456789");
-        param.put("callbackurl","http://dulikai.com/recharge/callback");
+        param.put("callbackurl","http://dulikai.com/p/recharge/callback");
         param.put("notifyurl","http://dulikai.com");
         Recharge recharge = new Recharge();
         recharge.setAmount(amount);

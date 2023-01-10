@@ -112,12 +112,53 @@
             <image src="/static/images/icon/balance.png"></image>
             <text>Saldo</text>
           </view>
-          <view>{{towNumber(user.accountBalance)}}</view>
+          <view class="button-view">
+            <button class="button-cz" @click="rechargeDialogToggle"><text
+              class="button-text">充值</text></button>
+            <button class="button-tx" @click="withdrawDialogToggle"><text
+                class="button-text">提现</text></button>
+          </view>
+          {{towNumber(user.accountBalance)}}
         </view>
+      </view>
+      <view>
+        <!-- 充值输入框 -->
+        <uni-popup ref="rechargeInputDialog" type="dialog">
+          <uni-popup-dialog ref="inputClose"  mode="input" title="充值" value=""
+                            placeholder="请输入充值金额" @confirm="rechargeSubmit" confirmText="Si" cancelText="No"></uni-popup-dialog>
+        </uni-popup>
+      </view>
+      <view style="border-radius: 11px">
+        <!-- 提现输入框 -->
+        <uni-popup ref="withdrawInputDialog" background-color="#fff" :mask-click="false">
+
+          <view class="popupView" style="width: 100%;height: 100%;">
+            <!-- 基础表单校验 -->
+            <uni-forms ref="valiForm" :rules="rules" :modelValue="valiFormData" label-position="top" style="margin: 50px">
+              <uni-forms-item label="姓名" style="margin-top: -8px;" required name="name">
+                <uni-easyinput v-model="valiFormData.name" placeholder="请输入姓名" />
+              </uni-forms-item>
+              <uni-forms-item label="银行名称" style="margin-top: -8px;" required name="bankName">
+                <uni-easyinput v-model="valiFormData.bankName" placeholder="请输入银行名称" />
+              </uni-forms-item>
+              <uni-forms-item label="银行卡号" style="margin-top: -8px;" required name="bankNum">
+                <uni-easyinput v-model="valiFormData.bankNum" placeholder="请输入银行卡号码" />
+              </uni-forms-item>
+              <view class="button-view">
+                <button class="button-cz" type="warn" @click="withdrawCloseDialogToggle"><text
+                    class="button-text">No</text></button>
+                <button class="button-cz" type="primary" @click="withdrawSubmit('valiForm')"><text
+                    class="button-text">Si</text></button>
+              </view>
+            </uni-forms>
+
+          </view>
+
+        </uni-popup>
       </view>
 
       <view class="my-menu">
-        <view class="memu-item" @tap="inputDialogToggle">
+        <view class="memu-item" @tap="recoveryDialogToggle">
           <view class="i-name">
             <image src="/static/images/icon/recovery.png"></image>
             <text>Reciclaje</text>
@@ -126,8 +167,8 @@
         </view>
       </view>
       <view>
-        <!-- 输入框示例 -->
-        <uni-popup ref="inputDialog" type="dialog">
+        <!-- 订单回收输入框 -->
+        <uni-popup ref="recoveryDialog" type="dialog">
           <uni-popup-dialog ref="inputClose"  mode="input" title="Ingrese el número de referencia de la orden" value=""
                             placeholder="Ingrese el número de referencia de la orden" @confirm="recoveryOrder" confirmText="Si" cancelText="No"></uni-popup-dialog>
         </uni-popup>
@@ -181,7 +222,56 @@
 				isAuthInfo: false,
 				loginResult: {},
         user: {},
-				picDomain: config.picDomain
+				picDomain: config.picDomain,
+        items: [{
+          text: "一年级",
+          value: "1-0",
+          children: [{
+            text: "1.1班",
+            value: "1-1"
+          },
+            {
+              text: "1.2班",
+              value: "1-2"
+            }
+          ]
+        },
+          {
+            text: "二年级",
+            value: "2-0"
+          },
+          {
+            text: "三年级",
+            value: "3-0"
+          }
+        ],
+        // 校验表单数据
+        valiFormData: {
+          name: '',
+          bankName: '',
+          bankNum: '',
+        },
+        // 校验规则
+        rules: {
+          name: {
+            rules: [{
+              required: true,
+              errorMessage: '姓名不能为空'
+            }]
+          },
+          bankName: {
+            rules: [{
+              required: true,
+              errorMessage: '银行名称不能为空'
+            }]
+          },
+          bankNum: {
+            rules: [{
+              required: true,
+              errorMessage: '银行卡号码不能为空'
+            }]
+          }
+        }
 			};
 		},
 
@@ -202,6 +292,7 @@
 		 * 生命周期函数--监听页面显示
 		 */
 		onShow: function() {
+
       //加载订单数字
       var ths = this; // var status = ths.data.status
 
@@ -218,7 +309,8 @@
         ths.setData({
           isAuthInfo: false
         })
-      }
+      };
+      this.getUserInfo();
       if (ths.isAuthInfo) {
         uni.showLoading();
         var params = {
@@ -345,9 +437,34 @@
 				};
 				http.request(params);
 			},
-      inputDialogToggle() {
-        this.$refs.inputDialog.open()
+      /**
+       * 点击订单回收
+       */
+      recoveryDialogToggle() {
+        this.$refs.recoveryDialog.open()
       },
+      /**
+       * 点击充值按钮
+       */
+      rechargeDialogToggle() {
+        this.$refs.rechargeInputDialog.open()
+      },
+      /**
+       * 点击提现按钮
+       */
+      withdrawDialogToggle() {
+        this.$refs.withdrawInputDialog.open()
+      },
+      /**
+       * 点击提现表单的取消按钮
+       */
+      withdrawCloseDialogToggle() {
+        this.$refs.withdrawInputDialog.close()
+      },
+      /**
+       * 回收订单
+       * @param orderNumber
+       */
       recoveryOrder: function(orderNumber){
         uni.showLoading({
           mask: true
@@ -375,6 +492,51 @@
         };
         http.request(params);
 
+      },
+      /**
+       * 充值余额
+       * @param orderNumber
+       */
+      rechargeSubmit: function(amount){
+        uni.showLoading({
+          mask: true
+        });
+        var params = {
+          url: "/p/recharge/submit/?amount="+amount,
+          method: "POST",
+          data: {},
+          callBack: res => {
+            console.log("res",res)
+            uni.hideLoading();
+            if(res){
+              uni.navigateTo({
+                url: '/pages/common/webView?url=' + res
+              })
+            }else{
+              uni.showToast({
+                title: "Fallo ",
+                icon:"none"
+              });
+            }
+          }
+        };
+        http.request(params);
+
+      },
+      /**
+       * 提现
+       * @param ref
+       */
+      withdrawSubmit(ref) {
+        this.$refs[ref].validate().then(res => {
+          uni.showToast({
+            title: "功能开发中...",
+            icon: "none"
+          })
+          console.log(res);
+        }).catch(err => {
+          console.log('err', err);
+        })
       },
 
 			/**
@@ -473,4 +635,25 @@
     font-size: 14px;
     color: #333;
   }
+
+
+  .button-view {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 30px;
+    margin: auto;
+    border-radius: 5px;
+  }
+
+  .button-text {
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    margin-right: 0;
+  }
+
+
 </style>

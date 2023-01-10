@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 @Slf4j
 @RestController
-@RequestMapping("/recharge/")
+@RequestMapping("/p/recharge/")
 @Api(tags = "用户充值金额接口")
 public class RechargeController {
 

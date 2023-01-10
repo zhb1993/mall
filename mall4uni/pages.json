@@ -147,6 +147,10 @@
 			}
 		},
 		{
+			"path": "pages/common/webView",
+			"style": {}
+		},
+		{
 			"path": "pages/recent-news/recent-news",
 			"style": {
 				"backgroundTextStyle": "light",
